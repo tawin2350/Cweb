@@ -448,103 +448,184 @@ const tips = [
   {
     id: 1,
     title: '💡 ใช้ const สำหรับค่าคงที่',
-    content: 'ใช้ <code>const</code> กับค่าที่ไม่เปลี่ยนแปลง ช่วยป้องกันการแก้ไขโดยไม่ตั้งใจ',
+    content: 'ใช้ <code>const</code> กับค่าที่ไม่ควรเปลี่ยนแปลง ช่วยป้องกันการแก้ไขโดยไม่ตั้งใจและทำให้โค้ดอ่านง่ายขึ้น',
     code: `const float PI = 3.14159;
 const int MAX_SIZE = 100;
 
-// PI = 3.14; // Error! ไม่สามารถเปลี่ยนได้`
+// PI = 3.14; // Error! ไม่สามารถแก้ไขค่าคงที่ได้`
   },
   {
     id: 2,
-    title: '⚡ ใช้ ++i แทน i++ ใน loop',
-    content: 'ใน for loop ควรใช้ <code>++i</code> จะเร็วกว่าเล็กน้อย (pre-increment vs post-increment)',
-    code: `// ดีกว่า
+    title: '⚡ ใช้ ++i ใน Loop',
+    content: 'ใช้ <code>++i</code> แทน <code>i++</code> ใน for loop จะมีประสิทธิภาพดีกว่าเล็กน้อย (pre-increment vs post-increment)',
+    code: `// ดีกว่า - pre-increment
 for (int i = 0; i < n; ++i) {
-    // ...
+    // โค้ดของคุณ
 }
 
-// ช้ากว่าเล็กน้อย
+// ใช้ได้แต่ช้ากว่า - post-increment
 for (int i = 0; i < n; i++) {
-    // ...
+    // โค้ดของคุณ
 }`
   },
   {
     id: 3,
     title: '🔍 Debug ด้วย printf',
-    content: 'ใช้ printf แสดงค่าตัวแปรเพื่อตรวจสอบการทำงาน',
-    code: `int x = 10;
+    content: 'การใช้ printf อย่างมีกลยุทธ์ช่วยติดตามการทำงานของโปรแกรมและค่าตัวแปรระหว่างการ debug',
+    code: `int x = 10, y = 20;
 printf("Debug: x = %d\\n", x);
 
-// แสดงหลายค่า
-printf("x=%d, y=%d, sum=%d\\n", x, y, x+y);`
+// แสดงหลายค่าพร้อมกัน
+printf("x=%d, y=%d, sum=%d\\n", x, y, x+y);
+
+// ใช้ป้ายกำกับที่บอกความหมาย
+printf("[DEBUG] ที่บรรทัด 45: count=%d\\n", count);`
   },
   {
     id: 4,
-    title: '🎯 ใช้ switch-case แทน if-else ยาว ๆ',
-    content: 'เมื่อมีหลายเงื่อนไขที่เปรียบเทียบค่าเดียวกัน ใช้ switch อ่านง่ายกว่า',
+    title: '🎯 ใช้ switch-case แทน if-else หลายๆ อัน',
+    content: 'เมื่อเปรียบเทียบตัวแปรเดียวกันกับหลายค่า ใช้ switch-case จะอ่านง่ายกว่า',
     code: `int choice;
 scanf("%d", &choice);
 
 switch (choice) {
     case 1:
-        printf("เมนู 1\\n");
+        printf("เลือกเมนู 1\\n");
         break;
     case 2:
-        printf("เมนู 2\\n");
+        printf("เลือกเมนู 2\\n");
         break;
     default:
-        printf("ไม่มีเมนูนี้\\n");
+        printf("ไม่มีตัวเลือกนี้\\n");
 }`
   },
   {
     id: 5,
     title: '📦 ระวังการเข้าถึง Array นอกขอบเขต',
-    content: 'การเข้าถึง index ที่เกินขนาด array จะทำให้โปรแกรม crash หรือผลลัพธ์ผิดพลาด',
+    content: 'ตรวจสอบ index ของ array เสมอเพื่อป้องกันโปรแกรม crash และพฤติกรรมที่ไม่คาดคิด',
     code: `int arr[5] = {1, 2, 3, 4, 5};
 
-// ถูกต้อง
-printf("%d", arr[4]); // index 0-4
+// ถูกต้อง - index ที่ใช้ได้คือ 0-4
+printf("%d", arr[4]);
 
-// ผิด! อาจ crash
-printf("%d", arr[5]); // index เกินขนาด`
+// ผิด! เกินขอบเขต - อาจทำให้ crash
+printf("%d", arr[5]);
+
+// การเข้าถึงที่ปลอดภัยด้วยการตรวจสอบ
+int index = 5;
+if (index < 5) {
+    printf("%d", arr[index]);
+}`
   },
   {
     id: 6,
     title: '🧮 ระวังการหารจำนวนเต็ม',
-    content: 'การหาร int ด้วย int จะได้ผลลัพธ์เป็น int (ไม่มีทศนิยม)',
-    code: `// ผิด - ได้ 0
-int avg = (5 + 6) / 2;  // 11/2 = 5
+    content: 'การหารจำนวนเต็มด้วยกันจะได้ผลลัพธ์เป็นจำนวนเต็ม (ตัดทศนิยมทิ้ง) ใช้ float หากต้องการทศนิยม',
+    code: `// ผิด - ผลลัพธ์เป็น 2
+int avg = 5 / 2;  // 5/2 = 2 (ตัดทศนิยม)
 
-// ถูก - ได้ 5.5
-float avg = (5 + 6) / 2.0;
+// ถูก - ผลลัพธ์เป็น 2.5
+float avg = 5 / 2.0;
 
-// หรือ cast เป็น float
-float avg = (float)(5 + 6) / 2;`
+// หรือใช้ cast เป็น float
+float avg = (float)5 / 2;
+float avg = 5 / (float)2;`
   },
   {
     id: 7,
     title: '🔐 ใช้ fgets แทน gets',
-    content: '<code>gets()</code> ไม่ปลอดภัย ใช้ <code>fgets()</code> แทนเพื่อป้องกัน buffer overflow',
+    content: '<code>gets()</code> ไม่ปลอดภัยและถูกยกเลิกแล้ว ใช้ <code>fgets()</code> เพื่อป้องกัน buffer overflow',
     code: `char name[50];
 
-// อันตราย - อาจเกิด overflow
+// อันตราย - เสี่ยงต่อ buffer overflow!
 // gets(name);
 
-// ปลอดภัย
-fgets(name, sizeof(name), stdin);`
+// ปลอดภัย - จำกัดขนาด input
+fgets(name, sizeof(name), stdin);
+
+// ลบ newline ตัวท้ายถ้าต้องการ
+name[strcspn(name, "\\n")] = '\\0';`
   },
   {
     id: 8,
-    title: '♻️ ปล่อย memory ที่ malloc',
-    content: 'เมื่อใช้ <code>malloc()</code> จอง memory ต้อง <code>free()</code> ทุกครั้งเพื่อไม่ให้เกิด memory leak',
+    title: '♻️ ปล่อย Memory ที่จองไว้เสมอ',
+    content: 'ทุกครั้งที่ใช้ <code>malloc()</code> ต้องมี <code>free()</code> คู่กันเพื่อป้องกัน memory leak',
     code: `#include <stdlib.h>
 
 int *arr = (int*)malloc(5 * sizeof(int));
 
-// ใช้งาน...
+// ใช้งาน array...
+arr[0] = 10;
 
-free(arr);  // สำคัญ! ปล่อย memory
-arr = NULL; // ป้องกันการใช้ pointer ที่ปล่อยแล้ว`
+// สำคัญ! ปล่อย memory เมื่อใช้เสร็จ
+free(arr);
+arr = NULL; // ป้องกัน dangling pointer`
+  },
+  {
+    id: 9,
+    title: '🎨 ใช้ typedef สำหรับ Type ที่ซับซ้อน',
+    content: 'สร้างชื่อแทน type เพื่อให้อ่านง่ายและแก้ไขสะดวก',
+    code: `// ก่อน
+struct Point {
+    int x, y;
+};
+struct Point p1;
+
+// หลัง - สะอาดกว่า!
+typedef struct {
+    int x, y;
+} Point;
+
+Point p1, p2;`
+  },
+  {
+    id: 10,
+    title: '🚀 Inline Functions เพิ่มประสิทธิภาพ',
+    content: 'ใช้ <code>inline</code> กับฟังก์ชันเล็กๆ ที่ถูกเรียกบ่อยเพื่อลด overhead ของการเรียกฟังก์ชัน',
+    code: `// ฟังก์ชันปกติ - มี overhead ในการเรียก
+int square(int x) {
+    return x * x;
+}
+
+// Inline - โค้ดจะถูกแทรกตรงจุดที่เรียก
+inline int square(int x) {
+    return x * x;
+}
+
+// เหมาะกับฟังก์ชันเล็กๆ ง่ายๆ
+inline int max(int a, int b) {
+    return (a > b) ? a : b;
+}`
+  },
+  {
+    id: 11,
+    title: '📝 ตั้งชื่อตัวแปรให้มีความหมาย',
+    content: 'ใช้ชื่อที่บอกความหมายแทนตัวอักษรเดียว (ยกเว้นใน loop) เพราะโค้ดถูกอ่านบ่อยกว่าเขียน',
+    code: `// แบบไม่ดี - ไม่ชัดเจน
+int a = 5;
+float b = 2.5;
+int c = a * b;
+
+// แบบดี - อธิบายตัวเอง
+int itemCount = 5;
+float pricePerItem = 2.5;
+float totalPrice = itemCount * pricePerItem;`
+  },
+  {
+    id: 12,
+    title: '⚠️ ตรวจสอบค่าที่ Return',
+    content: 'ตรวจสอบค่าที่ return จากฟังก์ชันที่อาจล้มเหลว เช่น malloc, scanf, การทำงานกับไฟล์',
+    code: `// แบบไม่ดี - ไม่ตรวจสอบ error
+int *arr = malloc(100 * sizeof(int));
+arr[0] = 10; // อาจ crash ถ้า malloc ล้มเหลว!
+
+// แบบดี - จัดการ error อย่างถูกต้อง
+int *arr = malloc(100 * sizeof(int));
+if (arr == NULL) {
+    fprintf(stderr, "จองหน่วยความจำล้มเหลว\\n");
+    return 1;
+}
+arr[0] = 10; // ปลอดภัยแล้ว`
   }
 ];
 
@@ -583,13 +664,31 @@ function initNavigation() {
 }
 
 function navigateTo(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(`page-${page}`).classList.add('active');
+  // Smooth page transition
+  const currentActive = document.querySelector('.page.active');
+  if (currentActive) {
+    currentActive.style.opacity = '0';
+    setTimeout(() => {
+      currentActive.classList.remove('active');
+      
+      const newPage = document.getElementById(`page-${page}`);
+      newPage.classList.add('active');
+      setTimeout(() => {
+        newPage.style.opacity = '1';
+      }, 10);
+    }, 200);
+  } else {
+    document.getElementById(`page-${page}`).classList.add('active');
+  }
   
-  document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+  // Update nav links
+  document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('active'));
   document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
   
   currentPage = page;
+  
+  // Scroll to top smoothly
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Lessons
@@ -606,7 +705,7 @@ function initLessons() {
         <div class="lesson-desc">${lesson.desc}</div>
       </div>
       <span class="lesson-status ${lesson.completed ? 'completed' : 'locked'}">
-        ${lesson.completed ? '✓ จบแล้ว' : '🔒 เริ่มเรียน'}
+        ${lesson.completed ? '✓ เรียนจบแล้ว' : '→ เริ่มเรียน'}
       </span>
     `;
     
@@ -629,7 +728,7 @@ function showLessonModal(lesson) {
       </div>
       <div class="modal-footer">
         <button class="btn-primary" onclick="completeLesson(${lesson.id})">
-          ✓ จบบทเรียนนี้แล้ว
+          ✓ ทำเครื่องหมายว่าเรียนจบ
         </button>
       </div>
     </div>
@@ -759,6 +858,7 @@ function solveChallenge(id) {
 }
 
 // Playground
+// Playground with Interactive Terminal
 function initPlayground() {
   const editor = ace.edit('code-editor');
   editor.setTheme('ace/theme/tomorrow_night');
@@ -770,19 +870,271 @@ function initPlayground() {
     enableLiveAutocompletion: true
   });
   
-  document.getElementById('run-code').addEventListener('click', () => {
-    const code = editor.getValue();
-    const output = document.getElementById('code-output');
+  // Set default code
+  const defaultCode = `#include <stdio.h>
+
+int main() {
+    char name[50];
+    int age;
     
-    // Simulate compilation and output (จริง ๆ ต้องใช้ WebAssembly compiler)
-    output.textContent = '🚧 กำลังพัฒนาฟีเจอร์คอมไพล์และรันโค้ด...\n\n';
-    output.textContent += '💡 ในเวอร์ชันสมบูรณ์จะใช้ WebAssembly (emscripten) เพื่อคอมไพล์และรัน C ในเบราว์เซอร์\n\n';
-    output.textContent += 'โค้ดที่คุณเขียน:\n' + code;
+    printf("What's your name? ");
+    scanf("%s", name);
     
-    stats.codeRuns++;
-    saveStats();
-    updateStats();
+    printf("How old are you? ");
+    scanf("%d", &age);
+    
+    printf("\\nHello %s! You are %d years old.\\n", name, age);
+    
+    return 0;
+}`;
+  
+  editor.setValue(defaultCode, -1);
+  
+  // Initialize xterm.js terminal
+  const term = new Terminal({
+    cursorBlink: true,
+    fontSize: 14,
+    fontFamily: 'Menlo, Monaco, "Courier New", monospace',
+    theme: {
+      background: '#000000',
+      foreground: '#ffffff',
+      cursor: '#ffffff',
+      selection: '#555555'
+    },
+    cols: 80,
+    rows: 24
   });
+  
+  term.open(document.getElementById('terminal'));
+  term.writeln('กดรันโค้ดเพื่อเริ่มต้นใช้งานเทอร์มินัลจำลองสำหรับ C');
+  term.writeln('');
+  
+  let currentInput = '';
+  let inputCallback = null;
+  
+  // Handle terminal input
+  term.onData(data => {
+    if (!inputCallback) return;
+    
+    if (data === '\r') { // Enter key
+      term.writeln('');
+      const input = currentInput;
+      currentInput = '';
+      if (inputCallback) {
+        inputCallback(input);
+        inputCallback = null;
+      }
+    } else if (data === '\u007F') { // Backspace
+      if (currentInput.length > 0) {
+        currentInput = currentInput.slice(0, -1);
+        term.write('\b \b');
+      }
+    } else if (data >= ' ') { // Printable characters
+      currentInput += data;
+      term.write(data);
+    }
+  });
+  
+  // Run button handler - Interactive Terminal Simulation
+  document.getElementById('run-code').addEventListener('click', async () => {
+    const code = editor.getValue();
+    const runBtn = document.getElementById('run-code');
+    
+    runBtn.disabled = true;
+    runBtn.textContent = '⏳ Compiling...';
+    
+    term.clear();
+    term.writeln('🔨 Compiling C code...');
+    
+    try {
+      // Check if code uses scanf
+      const hasScanf = code.includes('scanf');
+      const scanfCount = (code.match(/scanf/g) || []).length;
+      
+      if (hasScanf) {
+        // Interactive mode - run with real-time I/O simulation
+        await runInteractiveMode(code, scanfCount, term, runBtn);
+      } else {
+        // Non-interactive mode - simple run
+        await runSimpleMode(code, term, runBtn);
+      }
+      
+      stats.codeRuns++;
+      saveStats();
+      updateStats();
+      
+    } catch (error) {
+      term.writeln('\x1b[31m❌ Error: ' + error.message + '\x1b[0m');
+      term.writeln('Please check your internet connection and try again.');
+      runBtn.disabled = false;
+      runBtn.textContent = '▶ Run';
+    }
+  });
+  
+  // Interactive mode - simulate real terminal behavior
+  async function runInteractiveMode(code, scanfCount, term, runBtn) {
+    term.writeln('\x1b[32m✓ Compilation successful!\x1b[0m');
+    term.writeln('--- Running Program ---');
+    term.writeln('');
+    
+    // Parse printf/scanf from code to extract prompts
+    const prompts = extractPrompts(code);
+    const userInputs = [];
+    
+    // Collect inputs interactively
+    for (let i = 0; i < scanfCount; i++) {
+      const prompt = prompts[i] || `Input ${i + 1}: `;
+      term.write(prompt);
+      
+      const input = await new Promise(resolve => {
+        let lineInput = '';
+        
+        const onDataHandler = term.onData(data => {
+          if (data === '\r') {
+            term.writeln('');
+            onDataHandler.dispose();
+            resolve(lineInput);
+          } else if (data === '\u007F') {
+            if (lineInput.length > 0) {
+              lineInput = lineInput.slice(0, -1);
+              term.write('\b \b');
+            }
+          } else if (data >= ' ') {
+            lineInput += data;
+            term.write(data);
+          }
+        });
+      });
+      
+      userInputs.push(input);
+    }
+    
+    // Now run with collected inputs
+    term.writeln('');
+    term.writeln('\x1b[90m[Processing...]\x1b[0m');
+    term.writeln('');
+    
+    const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        language: 'c',
+        version: '10.2.0',
+        files: [{ name: 'main.c', content: code }],
+        stdin: userInputs.join('\n')
+      })
+    });
+    
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    const result = await response.json();
+    
+    if (result.compile && result.compile.output) {
+      term.writeln('\x1b[31m=== Compilation Error ===\x1b[0m');
+      term.writeln(result.compile.output);
+    } else if (result.run) {
+      // Display output with simulation
+      await displayOutputInteractive(result.run.output, prompts, userInputs, term);
+      
+      if (result.run.stderr) {
+        term.writeln('\x1b[31m' + result.run.stderr + '\x1b[0m');
+      }
+    }
+    
+    runBtn.disabled = false;
+    runBtn.textContent = '▶ Run';
+  }
+  
+  // Simple mode - no input required
+  async function runSimpleMode(code, term, runBtn) {
+    term.writeln('\x1b[32m✓ Compilation successful!\x1b[0m');
+    term.writeln('--- Running Program ---');
+    term.writeln('');
+    
+    const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        language: 'c',
+        version: '10.2.0',
+        files: [{ name: 'main.c', content: code }],
+        stdin: ''
+      })
+    });
+    
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    const result = await response.json();
+    
+    if (result.compile && result.compile.output) {
+      term.writeln('\x1b[31m=== Compilation Error ===\x1b[0m');
+      term.writeln(result.compile.output);
+    } else if (result.run) {
+      if (result.run.output) {
+        term.writeln(result.run.output);
+      }
+      if (result.run.stderr) {
+        term.writeln('\x1b[31m' + result.run.stderr + '\x1b[0m');
+      }
+      if (!result.run.output && !result.run.stderr) {
+        term.writeln('\x1b[90m(No output)\x1b[0m');
+      }
+    }
+    
+    runBtn.disabled = false;
+    runBtn.textContent = '▶ Run';
+  }
+  
+  // Extract printf prompts from code
+  function extractPrompts(code) {
+    const prompts = [];
+    const printfRegex = /printf\s*\(\s*"([^"]+)"/g;
+    let match;
+    
+    while ((match = printfRegex.exec(code)) !== null) {
+      const text = match[1];
+      // Check if this printf comes before scanf (is a prompt)
+      const beforeScanf = code.indexOf('scanf', match.index) > match.index;
+      if (beforeScanf && !text.includes('\\n') && text.trim()) {
+        // Clean up the prompt text
+        prompts.push(text.replace(/\\n/g, '').replace(/:/g, ': '));
+      }
+    }
+    
+    return prompts;
+  }
+  
+  // Display output with interactive simulation
+  async function displayOutputInteractive(output, prompts, userInputs, term) {
+    if (!output) {
+      term.writeln('\x1b[90m(No output)\x1b[0m');
+      return;
+    }
+    
+    const lines = output.split('\n');
+    let inputIndex = 0;
+    
+    for (const line of lines) {
+      // Check if this line is a prompt that we handled
+      const isPrompt = prompts.some(p => line.includes(p.replace(': ', '')));
+      
+      if (isPrompt && inputIndex < userInputs.length) {
+        // This was a prompt - show it with the user's input
+        term.write(line);
+        if (!line.endsWith(' ')) term.write(' ');
+        term.writeln('\x1b[36m' + userInputs[inputIndex] + '\x1b[0m');
+        inputIndex++;
+      } else if (line.trim()) {
+        // Regular output
+        term.writeln(line);
+      } else {
+        term.writeln('');
+      }
+      
+      // Small delay for visual effect
+      await new Promise(resolve => setTimeout(resolve, 10));
+    }
+  }
 }
 
 // Tips
@@ -805,9 +1157,10 @@ function initTips() {
 
 // Stats
 function updateStats() {
-  document.getElementById('lessons-completed').textContent = stats.lessonsCompleted;
-  document.getElementById('challenges-solved').textContent = stats.challengesSolved;
-  document.getElementById('code-runs').textContent = stats.codeRuns;
+  // Animate numbers
+  animateNumber('lessons-completed', stats.lessonsCompleted);
+  animateNumber('challenges-solved', stats.challengesSolved);
+  animateNumber('code-runs', stats.codeRuns);
   
   const totalLessons = lessons.length;
   const totalChallenges = challenges.length;
@@ -816,7 +1169,37 @@ function updateStats() {
      (stats.challengesSolved / totalChallenges) * 50)
   );
   
-  document.getElementById('overall-progress').textContent = progress + '%';
+  // Animate progress bar
+  const progressBar = document.getElementById('progress-fill');
+  const progressText = document.getElementById('overall-progress');
+  
+  if (progressBar) {
+    progressBar.style.width = progress + '%';
+  }
+  progressText.textContent = progress + '%';
+}
+
+function animateNumber(elementId, targetValue) {
+  const element = document.getElementById(elementId);
+  const currentValue = parseInt(element.textContent) || 0;
+  
+  if (currentValue === targetValue) return;
+  
+  const duration = 500;
+  const steps = 20;
+  const stepValue = (targetValue - currentValue) / steps;
+  const stepDuration = duration / steps;
+  
+  let current = currentValue;
+  const timer = setInterval(() => {
+    current += stepValue;
+    if ((stepValue > 0 && current >= targetValue) || (stepValue < 0 && current <= targetValue)) {
+      element.textContent = targetValue;
+      clearInterval(timer);
+    } else {
+      element.textContent = Math.round(current);
+    }
+  }, stepDuration);
 }
 
 function saveStats() {
